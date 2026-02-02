@@ -95,7 +95,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 // If profile doesn't exist, do NOT auto-create - let ProfileSetupScreen handle it
                 if (error.code === 'PGRST116') {
                     // Profile not found - this is a new user who needs to set up profile
-                    console.log('No profile found - new user needs ProfileSetup');
                     setProfile(null);
                 }
             } else {

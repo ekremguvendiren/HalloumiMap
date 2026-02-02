@@ -62,8 +62,6 @@ export const ProfileSetupScreen = () => {
 
             if (error) throw error;
 
-            console.log("Profile created! Refreshing auth context...");
-
             // 3. Trigger auth state refresh - this will automatically navigate to Main
             // by updating the profile in AuthContext
             const { data: { session: currentSession } } = await supabase.auth.getSession();

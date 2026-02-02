@@ -250,7 +250,6 @@ export const MapScreen = () => {
                 5 // Spawn 5 Raider Bots
             );
             setBots(raiders);
-            console.log("👾 Spawned 5 Raider Bots!");
         }
     }, [location]);
 
@@ -269,7 +268,6 @@ export const MapScreen = () => {
                 const newEnergy = Math.min(100, profile.energy + 5);
                 await supabase.from('profiles').update({ energy: newEnergy }).eq('id', currentUser.id);
                 setCurrentUser((prev: any) => prev ? { ...prev, energy: newEnergy } : prev);
-                console.log("⚡ Energy regenerated:", newEnergy);
             }
         }, 5 * 60 * 1000); // Every 5 minutes
 
@@ -296,7 +294,7 @@ export const MapScreen = () => {
             }, { dist: Infinity });
 
             if (closestT && closestT.dist < 100) {
-                console.log("Beep! Treasure nearby:", closestT.dist);
+                // Treasure nearby - could trigger beep sound here
             }
         }
     }, [location]);
@@ -530,7 +528,6 @@ export const MapScreen = () => {
 
     // Unified Report Handler (FAB)
     const handleCreateReport = async (type: string) => {
-        console.log("Creating report:", type); // Debug
         if (!location) {
             Alert.alert("Error", "No GPS Location.");
             return;
