@@ -35,33 +35,6 @@ HellumiMap is a social mapping application built specifically for the unique dri
 - Expo Go app on your phone (iOS/Android)
 - Supabase Account
 
-### Installation
-
-1.  **Clone the repository**
-    ```bash
-    git clone https://github.com/ekremguvendiren/HellumiMap.git
-    cd HellumiMap
-    ```
-
-2.  **Install Dependencies**
-    ```bash
-    npm install
-    ```
-
-3.  **Environment Setup**
-    Create a `.env` file (or simply update `src/services/supabase.ts` for MVP) with your keys:
-    ```typescript
-    // src/services/supabase.ts
-    const supabaseUrl = "YOUR_SUPABASE_URL";
-    const supabaseAnonKey = "YOUR_SUPABASE_ANON_KEY";
-    ```
-
-4.  **Run the App**
-    ```bash
-    npx expo start
-    ```
-    Scan the QR code with Expo Go.
-
 ## 🗄️ Database Schema
 
 The project uses Supabase. Run the following SQL scripts (found in `docs/` or generated artifacts) to set up your database:
