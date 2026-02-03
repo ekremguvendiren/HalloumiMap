@@ -1,4 +1,4 @@
-# HalloumiMap 🧀
+# HalloumiMap 
  
 > Real-time collaborative navigation, clan territories, and community-driven road safety.
 
