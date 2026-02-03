@@ -4,13 +4,6 @@
 
 HellumiMap is a social mapping application built specifically for the unique driving culture of Cyprus. It combines real-time hazard reporting (Speed Cameras, Police, Traffic) with gamification elements like XP, Tiers, and Clan Territories.
 
-## 🗺️ Roadmap & Territory Expansion
-
-Our mission starts in the **Island of Cyprus**, but the conquest doesn't end here.
-1.  **Priority 1:** Cyprus (Island-Wide)
-2.  **Target 2:** Turkey & Greece
-3.  **Target 3:** United Kingdom, European Union, and Azerbaijan
-
 ## ✨ Features
 
 - **📍 Real-Time Reporting**: Users can pin hazards (Speed Cams, Police, Traffic) on the map.
