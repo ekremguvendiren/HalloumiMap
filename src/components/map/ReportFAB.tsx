@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Animated } from 'react-native';
 import { COLORS } from '../../constants/colors';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 
 interface ReportFABProps {
     onReport: (type: 'POLICE' | 'SPEED_CAMERA' | 'HAZARD' | 'HELLUMI_SPOT' | 'ACCIDENT') => void;
 }
 
 export const ReportFAB = ({ onReport }: ReportFABProps) => {
-    const { t } = useTranslation();
+    // const { t } = useTranslation(); // Unused
     const [expanded, setExpanded] = useState(false);
 
     // Simple state-based visibility toggle for MVP (can be animated later)

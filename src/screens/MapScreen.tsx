@@ -7,7 +7,7 @@ import { Marker, Callout, PROVIDER_GOOGLE, Circle, Polyline, Polygon } from 'rea
 
 import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
-import { useTranslation } from 'react-i18next';
+import { useIntlayer, useLocale } from 'react-intlayer';
 import { GlassContainer } from '../components/common/GlassContainer';
 import { VerificationCard } from '../components/map/VerificationCard';
 import { COLORS } from '../constants/colors';
@@ -174,7 +174,8 @@ const MemoizedCustomMarker = React.memo(CustomMarker);
 
 export const MapScreen = () => {
     const navigation = useNavigation<any>();
-    const { t } = useTranslation();
+    const { common, map } = useIntlayer('app');
+    const { locale } = useLocale();
 
 
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
@@ -492,13 +493,14 @@ export const MapScreen = () => {
 
             // Voice Alert (500m)
             if (dist < 500 && !alertedReports.current.has(report.id)) {
-                let msg = VoiceService.alerts.hazard; // Using getter for fresh translation
+                let msg = map.hazard_ahead.value;
                 if (report.type === 'SPEED_CAMERA') {
-                    msg = VoiceService.getRadarAlert(report.speed_limit || 50);
+                    msg = map.radar_ahead.value.replace('{speed}', (report.speed_limit || 50).toString());
                 }
-                else if (report.type === 'POLICE') msg = VoiceService.alerts.police;
+                else if (report.type === 'POLICE') msg = map.police_ahead.value;
+                else if (report.type === 'TRAFFIC') msg = map.traffic_ahead.value;
 
-                VoiceService.speak(msg);
+                VoiceService.speak(msg, locale.toString());
                 alertedReports.current.add(report.id);
             }
 
@@ -552,7 +554,7 @@ export const MapScreen = () => {
             setReports(prev => [pendingMarker, ...prev]);
 
             await ReportService.createReport(currentUser.id, type as any, location.coords.latitude, location.coords.longitude);
-            VoiceService.speak("Reported! +10 XP"); // Local feedback
+            VoiceService.speak("Reported! +10 XP", locale.toString()); // Local feedback
             Alert.alert("Reported!", "You gained +10 XP!");
 
             // Refresh logic optional or rely on subscription
@@ -560,7 +562,7 @@ export const MapScreen = () => {
             const active = await ReportService.getActiveReports();
             // ... (Simple refetch if needed, but subscription handles it usually)
         } catch (e) {
-            Alert.alert(t('common.error'));
+            Alert.alert(common.error.value);
             // Remove optimistic marker on error
             setReports(prev => prev.filter(r => !r.id.startsWith('pending-')));
         }
@@ -568,14 +570,14 @@ export const MapScreen = () => {
 
     // Verification
     const handleVerify = async (id: string, vote: any) => {
-        VoiceService.speak(t('common.success'));
+        VoiceService.speak(common.success.value, locale.toString());
         setNearestReport(null);
     };
 
     // --- TEST MODE: Place Radar 200m Ahead ---
     const handleTestRadar = async () => {
         if (!location) {
-            Alert.alert(t('common.error'), t('map.permission_denied'));
+            Alert.alert(common.error.value, map.permission_denied.value);
             return;
         }
 
@@ -598,7 +600,7 @@ export const MapScreen = () => {
         const newLat = lat2 * 180 / Math.PI;
         const newLon = lon2 * 180 / Math.PI;
 
-        VoiceService.speak("Test radar");
+        VoiceService.speak("Test radar", locale.toString());
 
         try {
             // Using basic 'POLICE' for test button, but calling old method if compatible or update test logic
@@ -606,7 +608,7 @@ export const MapScreen = () => {
             await ReportService.createReport("TEST_USER", "SPEED_CAMERA", newLat, newLon);
             Alert.alert("DEBUG", `Radar at ${newLat.toFixed(4)}, ${newLon.toFixed(4)}`);
         } catch (e) {
-            Alert.alert(t('common.error'));
+            Alert.alert(common.error.value);
         }
     }
 
@@ -636,7 +638,7 @@ export const MapScreen = () => {
                         };
                         setLocation(newLoc as any);
                         setFollowUser(false); // Stop following real GPS
-                        VoiceService.speak("Teleport active.");
+                        VoiceService.speak("Teleport active.", locale.toString());
                     }
                 }
             ]
@@ -650,7 +652,7 @@ export const MapScreen = () => {
     if (permissionStatus !== 'granted') {
         return (
             <View className="flex-1 bg-gray-900 items-center justify-center p-6">
-                <Text className="text-white text-xl font-bold mb-2">{t('map.permission_denied')}</Text>
+                <Text className="text-white text-xl font-bold mb-2">{map.permission_denied.value}</Text>
                 <Text className="text-gray-400 text-center">Location needed.</Text>
                 <TouchableOpacity onPress={Location.requestForegroundPermissionsAsync} className="mt-4 bg-deepsea px-6 py-3 rounded-full">
                     <Text className="text-white font-bold">Grant</Text>

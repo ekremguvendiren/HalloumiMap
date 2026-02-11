@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Switch, ScrollView, SafeAreaView, TouchableOpacity, Alert, Image } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import { useIntlayer, useLocale } from 'react-intlayer';
+import { Locales } from 'intlayer';
 import { GlassContainer } from '../components/common/GlassContainer';
 import { COLORS } from '../constants/colors';
 import { getTier, getTierProgress } from '../utils/gamification';
@@ -8,7 +9,8 @@ import { supabase } from '../services/supabase';
 import Constants from 'expo-constants'; // For version
 
 export const ProfileScreen = () => {
-    const { t, i18n } = useTranslation();
+    const { profile, common } = useIntlayer('app');
+    const { locale, setLocale } = useLocale();
     const [ghostMode, setGhostMode] = useState(false);
     const [userProfile, setUserProfile] = useState<any>(null);
 
@@ -31,16 +33,16 @@ export const ProfileScreen = () => {
 
     const toggleGhostMode = () => setGhostMode(!ghostMode);
 
-    const changeLanguage = (lang: string) => {
-        i18n.changeLanguage(lang);
-        Alert.alert(t('common.success'), `Language changed to ${lang.toUpperCase()}`);
+    const changeLanguage = (lang: Locales) => {
+        setLocale(lang);
+        Alert.alert(common.success.value, `Language changed to ${lang.toUpperCase()}`);
     };
 
     return (
         <View className="flex-1 bg-gray-100">
             <SafeAreaView className="flex-1">
                 <ScrollView className="px-6 py-4">
-                    <Text className="text-2xl font-bold text-deepsea mb-6">{t('profile.stats')}</Text>
+                    <Text className="text-2xl font-bold text-deepsea mb-6">{profile.stats.value}</Text>
 
                     {/* Header Card */}
                     <GlassContainer className="mb-6 p-4 items-center">
@@ -72,11 +74,11 @@ export const ProfileScreen = () => {
                     </GlassContainer>
 
                     {/* Settings Section */}
-                    <Text className="text-lg font-bold text-gray-700 mb-3">{t('profile.settings')}</Text>
+                    <Text className="text-lg font-bold text-gray-700 mb-3">{profile.settings.value}</Text>
                     <GlassContainer className="mb-6">
                         <View className="flex-row items-center justify-between py-2 border-b border-gray-100 pb-2 mb-2">
                             <View>
-                                <Text className="font-semibold text-gray-800">{t('profile.ghost_mode')} 👻</Text>
+                                <Text className="font-semibold text-gray-800">{profile.ghost_mode.value} 👻</Text>
                                 <Text className="text-xs text-gray-500 w-48">Hide from map.</Text>
                             </View>
                             <Switch
@@ -89,15 +91,15 @@ export const ProfileScreen = () => {
 
                         {/* Language Switcher */}
                         <View className="flex-row items-center justify-between py-2">
-                            <Text className="font-semibold text-gray-800">{t('profile.language')} 🌐</Text>
+                            <Text className="font-semibold text-gray-800">{profile.language.value} 🌐</Text>
                             <View className="flex-row space-x-2">
-                                {['en', 'tr', 'el', 'ru'].map(lang => (
+                                {[Locales.ENGLISH, Locales.TURKISH, Locales.GREEK, Locales.RUSSIAN].map(lang => (
                                     <TouchableOpacity
                                         key={lang}
                                         onPress={() => changeLanguage(lang)}
-                                        className={`px-3 py-1 rounded-md ${i18n.language === lang ? 'bg-deepsea' : 'bg-gray-200'}`}
+                                        className={`px-3 py-1 rounded-md ${locale === lang ? 'bg-deepsea' : 'bg-gray-200'}`}
                                     >
-                                        <Text className={`font-bold ${i18n.language === lang ? 'text-white' : 'text-gray-600'}`}>
+                                        <Text className={`font-bold ${locale === lang ? 'text-white' : 'text-gray-600'}`}>
                                             {lang.toUpperCase()}
                                         </Text>
                                     </TouchableOpacity>
@@ -135,7 +137,7 @@ export const ProfileScreen = () => {
                     </GlassContainer>
 
                     {/* Badges Gallery */}
-                    <Text className="text-lg font-bold text-gray-700 mb-3">{t('profile.badges')}</Text>
+                    <Text className="text-lg font-bold text-gray-700 mb-3">{profile.badges.value}</Text>
                     <View className="flex-row flex-wrap justify-between">
                         {/* Mock Badges */}
                         {['Kyrenia', 'Nicosia'].map(region => (

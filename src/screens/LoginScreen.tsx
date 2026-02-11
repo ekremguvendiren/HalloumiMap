@@ -3,38 +3,39 @@ import { View, Text, SafeAreaView, Image, TouchableOpacity, TextInput, Alert, Ac
 import { useNavigation } from '@react-navigation/native';
 import { supabase } from '../services/supabase';
 import { COLORS } from '../constants/colors';
-import { useTranslation } from 'react-i18next';
+import { useIntlayer } from 'react-intlayer';
 
 const LoginForm = () => {
     const navigation = useNavigation<any>();
+    const { auth, common } = useIntlayer('app');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleLogin = async () => {
         if (!email || !password) {
-            Alert.alert("Error", "Please enter email and password.");
+            Alert.alert(common.error.value, "Please enter email and password.");
             return;
         }
         setLoading(true);
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         setLoading(false);
-        if (error) Alert.alert("Login Failed", error.message);
+        if (error) Alert.alert(auth.login_failed.value, error.message);
     };
 
     const handleForgotPassword = async () => {
         if (!email) {
-            Alert.alert("Required", "Please enter your email first to reset password.");
+            Alert.alert(common.error.value, "Please enter your email first to reset password.");
             return;
         }
         const { error } = await supabase.auth.resetPasswordForEmail(email);
-        if (error) Alert.alert("Error", error.message);
-        else Alert.alert("Sent", "Check your email for password reset link.");
+        if (error) Alert.alert(common.error.value, error.message);
+        else Alert.alert(common.success.value, "Check your email for password reset link.");
     };
 
     return (
         <View className="mb-4">
-            <Text className="text-gray-500 mb-1 ml-1 text-xs uppercase font-bold">Email</Text>
+            <Text className="text-gray-500 mb-1 ml-1 text-xs uppercase font-bold">{auth.email.value}</Text>
             <TextInput
                 className="bg-gray-100 p-4 rounded-xl mb-3 text-gray-800 border border-gray-200"
                 placeholder="hello@example.com"
@@ -44,7 +45,7 @@ const LoginForm = () => {
                 keyboardType="email-address"
             />
 
-            <Text className="text-gray-500 mb-1 ml-1 text-xs uppercase font-bold">Password</Text>
+            <Text className="text-gray-500 mb-1 ml-1 text-xs uppercase font-bold">{auth.password.value}</Text>
             <View className="mb-4">
                 <TextInput
                     className="bg-gray-100 p-4 rounded-xl text-gray-800 border border-gray-200"
@@ -54,7 +55,7 @@ const LoginForm = () => {
                     secureTextEntry
                 />
                 <TouchableOpacity onPress={handleForgotPassword} className="absolute right-4 top-4">
-                    <Text className="text-orange-500 text-xs font-bold">Forgot?</Text>
+                    <Text className="text-orange-500 text-xs font-bold">{auth.forgot_password.value}</Text>
                 </TouchableOpacity>
             </View>
 
@@ -63,18 +64,18 @@ const LoginForm = () => {
                 disabled={loading}
                 className={`p-4 rounded-xl items-center shadow-sm ${loading ? 'bg-gray-400' : 'bg-gray-900'}`}
             >
-                {loading ? <ActivityIndicator color="white" /> : <Text className="text-white font-bold text-lg">Sign In</Text>}
+                {loading ? <ActivityIndicator color="white" /> : <Text className="text-white font-bold text-lg">{auth.sign_in.value}</Text>}
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => navigation.navigate('Register')} className="mt-4 items-center">
-                <Text className="text-gray-500">Don't have an account? <Text className="text-orange-500 font-bold">Sign Up</Text></Text>
+                <Text className="text-gray-500">{auth.no_account.value} <Text className="text-orange-500 font-bold">{auth.sign_up.value}</Text></Text>
             </TouchableOpacity>
         </View>
     );
 };
 
 export const LoginScreen = () => {
-    const { t } = useTranslation();
+    const { auth } = useIntlayer('app');
 
     return (
         <SafeAreaView className="flex-1 bg-white">
@@ -102,12 +103,12 @@ export const LoginScreen = () => {
                         }}
                         className="mt-4 p-3 bg-gray-100 rounded-xl items-center"
                     >
-                        <Text className="text-gray-500 font-bold text-xs">Guest / Test Login 🕵️</Text>
+                        <Text className="text-gray-500 font-bold text-xs">{auth.guest_login.value}</Text>
                     </TouchableOpacity>
                 </View>
 
                 <Text className="text-xs text-gray-400 mt-8 text-center px-8">
-                    By continuing, you agree to our Terms of Service and Privacy Policy.
+                    {auth.terms.value}
                 </Text>
             </View>
         </SafeAreaView>

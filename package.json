@@ -48,7 +48,13 @@
     "@types/react": "~19.1.10",
     "babel-preset-expo": "^54.0.10",
     "install": "^0.13.0",
+    "intlayer-editor": "^8.0.4",
     "react-refresh": "^0.18.0",
+    "typescript": "~5.9.2"
+  },
+  "private": true
+}
+ "^0.18.0",
     "typescript": "~5.9.2"
   },
   "private": true

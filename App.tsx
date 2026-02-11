@@ -1,6 +1,8 @@
 import "./global.css";
-import './src/i18n'; // Initialize i18n
+import "intlayer/polyfill";
+// import './src/i18n'; // Initialize i18n - Removed as we use Intlayer now
 import React, { useEffect } from 'react';
+import { IntlayerProvider } from "react-intlayer";
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { AuthProvider } from './src/context/AuthContext';
 import { ErrorBoundary } from './src/components/common/ErrorBoundary';
@@ -23,11 +25,13 @@ export default function App() {
   }, []);
 
   return (
-    <ErrorBoundary>
-      <AuthProvider>
-        <StatusBar style="light" />
-        <RootNavigator />
-      </AuthProvider>
-    </ErrorBoundary>
+    <IntlayerProvider>
+      <ErrorBoundary>
+        <AuthProvider>
+          <StatusBar style="light" />
+          <RootNavigator />
+        </AuthProvider>
+      </ErrorBoundary>
+    </IntlayerProvider>
   );
 }
