@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Switch, ScrollView, SafeAreaView, TouchableOpacity, Alert, Image } from 'react-native';
 import { useIntlayer, useLocale } from 'react-intlayer';
 import { Locales } from 'intlayer';
+import type { DeclaredLocales } from '@intlayer/types';
 import { GlassContainer } from '../components/common/GlassContainer';
 import { COLORS } from '../constants/colors';
 import { getTier, getTierProgress } from '../utils/gamification';
@@ -33,7 +34,7 @@ export const ProfileScreen = () => {
 
     const toggleGhostMode = () => setGhostMode(!ghostMode);
 
-    const changeLanguage = (lang: Locales) => {
+    const changeLanguage = (lang: DeclaredLocales) => {
         setLocale(lang);
         Alert.alert(common.success.value, `Language changed to ${lang.toUpperCase()}`);
     };
